@@ -10,7 +10,7 @@
          processIsolation="false"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="drakakisgeo Test Suite">
+        <testsuite name="fantasytravel Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

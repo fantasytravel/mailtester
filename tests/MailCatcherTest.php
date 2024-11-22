@@ -1,6 +1,6 @@
 <?php
 
-namespace Drakakisgeo\Mailtester;
+namespace Fantasytravel\Mailtester;
 
 use Orchestra\Testbench\TestCase;
 
