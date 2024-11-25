@@ -75,7 +75,7 @@ class MailCatcherTest extends TestCase
         $this->buildMailMessage(['subject' => 'Test target 1', 'body' => 'test'])->sendMail();
         $this->buildMailMessage(['subject' => 'Test 2', 'body' => 'test'])->sendMail();
 
-        $this->assertEmailFirstSubjectContains('target');
+        $this::assertEmailFirstSubjectContains('target');
     }
 
     /** @test */

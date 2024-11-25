@@ -3,6 +3,7 @@
 namespace Fantasytravel\Mailtester;
 
 use GuzzleHttp\Client;
+use PHPUnit\Framework\Assert;
 
 trait InteractsWithMailCatcher
 {
@@ -52,7 +53,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailFirstSubjectContains($needle, $description = '')
     {
-        $this->assertStringContainsString($needle, $this->getEmailFirstMessage()->subject, $description);
+        Assert::assertStringContainsString($needle, $this->getEmailFirstMessage()->subject, $description);
     }
 
     /**
@@ -63,7 +64,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailLastSubjectContains($needle, $description = '')
     {
-        $this->assertStringContainsString($needle, $this->getEmailLastMessage()->subject, $description);
+        Assert::assertStringContainsString($needle, $this->getEmailLastMessage()->subject, $description);
     }
 
     /**
@@ -74,7 +75,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailNthSubjectContains($needle, $nth, $description = '')
     {
-        $this->assertStringContainsString($needle, $this->getEmailMessage($nth)->subject, $description);
+        Assert::assertStringContainsString($needle, $this->getEmailMessage($nth)->subject, $description);
     }
 
 
@@ -129,7 +130,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailFirstHtmlContains($needle, $description = '')
     {
-        $this->assertEmailHtmlContains($needle, $this->getEmailFirstMessage(), $description);
+        self::assertEmailHtmlContains($needle, $this->getEmailFirstMessage(), $description);
     }
 
     /**
@@ -140,7 +141,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailLastHtmlContains($needle, $description = '')
     {
-        $this->assertEmailHtmlContains($needle, $this->getEmailLastMessage(), $description);
+        self::assertEmailHtmlContains($needle, $this->getEmailLastMessage(), $description);
     }
 
 
@@ -153,7 +154,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailNthHtmlContains($needle, $nth, $description = '')
     {
-        $this->assertEmailHtmlContains($needle, $this->getEmailMessage($nth), $description);
+        self::assertEmailHtmlContains($needle, $this->getEmailMessage($nth), $description);
     }
 
     /**
@@ -166,7 +167,7 @@ trait InteractsWithMailCatcher
     public function assertEmailHtmlContains($needle, $email, $description = '')
     {
         $response = $this->mailcatcher->get("/messages/{$email->id}.html");
-        $this->assertStringContainsString($needle, (string) $response->getBody(), $description);
+        Assert::assertStringContainsString($needle, (string) $response->getBody(), $description);
     }
 
     /**
@@ -213,7 +214,7 @@ trait InteractsWithMailCatcher
     public function assertEmailTextContains($needle, $email, $description = '')
     {
         $response = $this->mailcatcher->get("/messages/{$email->id}.plain");
-        $this->assertStringContainsString($needle, (string) $response->getBody(), $description);
+        Assert::assertStringContainsString($needle, (string) $response->getBody(), $description);
     }
 
 
@@ -308,7 +309,7 @@ trait InteractsWithMailCatcher
     public function assertEmailRecipientsContain($needle, $email, $description = '')
     {
         $needle = '<'.$needle.'>';
-        $this->assertTrue(in_array($needle,$email->recipients),$description);
+        $this->assertTrue(in_array($needle, $email->recipients), $description);
     }
 
     /**
@@ -354,7 +355,7 @@ trait InteractsWithMailCatcher
     public function assertEmailCcContain($needle, $email, $description = '')
     {
         $needle = '<'.$needle.'>';
-        $this->assertTrue(in_array($needle,$email->recipients),$description);
+        $this->assertTrue(in_array($needle, $email->recipients), $description);
     }
 
     /**
@@ -402,7 +403,7 @@ trait InteractsWithMailCatcher
      */
     public function assertEmailBccContain($needle, $email, $description = '')
     {
-        $this->assertTrue(in_array($needle,$email->recipients),$description);
+        $this->assertTrue(in_array($needle, $email->recipients), $description);
     }
 
     /**
@@ -430,11 +431,11 @@ trait InteractsWithMailCatcher
     /**
      * Get the first message
      */
-    private function getEmailFirstMessage()
+    public function getEmailFirstMessage()
     {
         $messages = $this->getEmailMessages();
         if (empty($messages)) {
-            $this->fail("No messages received");
+            self::fail("No messages received");
         }
 
         return array_shift($messages);
@@ -473,18 +474,18 @@ trait InteractsWithMailCatcher
     private function getEmailMessages()
     {
         $jsonResponse = $this->mailcatcher->get('/messages');
-        return json_decode($jsonResponse->getBody());
+        return json_decode($jsonResponse->getBody(), false);
     }
 
     /**
      * Abstract methods from PhpUnit
      */
-    abstract public function assertStringContainsString(string $needle, string $haystack, string $message = ''): void;
+    abstract public static function assertStringContainsString(string $needle, string $haystack, string $message = ''): void;
 
-    abstract public function assertEquals($expected, $actual, string $message = ''): void;
+    abstract public static function assertEquals($expected, $actual, string $message = ''): void;
 
-    abstract public function fail(string $message = ''): void;
+    abstract public static function fail(string $message = ''): void;
 
-    abstract public function assertNotEmpty($actual, string $message = ''): void;
+    abstract public static function assertNotEmpty($actual, string $message = ''): void;
 
 }
